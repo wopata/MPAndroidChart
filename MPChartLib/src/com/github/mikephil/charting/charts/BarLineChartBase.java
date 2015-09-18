@@ -108,6 +108,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     protected Transformer mRightAxisTransformer;
 
     protected XAxisRenderer mXAxisRenderer;
+    private Integer mSelectedIndex;
 
     // /** the approximator object used for data filtering */
     // private Approximator mApproximator;
@@ -1490,5 +1491,16 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         }
 
         return null;
+    }
+
+    public void setSelectedIndex(Integer mSelectedIndex) {
+        this.mSelectedIndex = mSelectedIndex;
+        mXAxis.setSelectedIndex(mSelectedIndex);
+        mRenderer.setSelectedIndex(mSelectedIndex);
+        invalidate();
+    }
+
+    public Object getSelectedIndex() {
+        return mSelectedIndex;
     }
 }

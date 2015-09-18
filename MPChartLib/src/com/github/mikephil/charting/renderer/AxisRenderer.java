@@ -24,6 +24,9 @@ public abstract class AxisRenderer extends Renderer {
     /** paint for the x-label values */
     protected Paint mAxisLabelPaint;
 
+    /** paint for the x-label values */
+    protected Paint mAxisHighlightedLabelPaint;
+
     /** paint for the line surrounding the chart */
     protected Paint mAxisLinePaint;
 
@@ -36,6 +39,7 @@ public abstract class AxisRenderer extends Renderer {
         this.mTrans = trans;
 
         mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mAxisHighlightedLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mGridPaint = new Paint();
         mGridPaint.setColor(Color.GRAY);
@@ -59,6 +63,16 @@ public abstract class AxisRenderer extends Renderer {
      */
     public Paint getPaintAxisLabels() {
         return mAxisLabelPaint;
+    }
+
+
+    /**
+     * Returns the Paint object used for drawing the axis (highlighted labels).
+     *
+     * @return
+     */
+    public Paint getPaintAxisHighlightedLabels() {
+        return mAxisHighlightedLabelPaint;
     }
 
     /**

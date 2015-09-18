@@ -3,9 +3,11 @@ package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
+import android.graphics.Shader;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -27,6 +29,7 @@ public class XAxisRenderer extends AxisRenderer {
 
         mAxisLabelPaint.setColor(Color.BLACK);
         mAxisLabelPaint.setTextAlign(Align.CENTER);
+        mAxisHighlightedLabelPaint.setTextAlign(Align.CENTER);
         mAxisLabelPaint.setTextSize(Utils.convertDpToPixel(10f));
     }
 
@@ -60,6 +63,11 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTypeface(mXAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
+
+        mAxisHighlightedLabelPaint.setTypeface(mXAxis.getHightlightedTypeface());
+        mAxisHighlightedLabelPaint.setTextSize(mXAxis.getHightlightedTextSize());
+        mAxisHighlightedLabelPaint.setColor(mXAxis.getHightlightedTextColor());
+
 
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
 
@@ -136,7 +144,7 @@ public class XAxisRenderer extends AxisRenderer {
 
                     // avoid clipping of the last
                     if (i == mXAxis.getValues().size() - 1 && mXAxis.getValues().size() > 1) {
-                        float width = Utils.calcTextWidth(mAxisLabelPaint, label);
+                        float width = Utils.calcTextWidth(getLabelPaint(i), label);
 
                         if (width > mViewPortHandler.offsetRight() * 2
                                 && position[0] + width > mViewPortHandler.getChartWidth())
@@ -145,7 +153,7 @@ public class XAxisRenderer extends AxisRenderer {
                         // avoid clipping of the first
                     } else if (i == 0) {
 
-                        float width = Utils.calcTextWidth(mAxisLabelPaint, label);
+                        float width = Utils.calcTextWidth(getLabelPaint(i), label);
                         position[0] += width / 2;
                     }
                 }
@@ -155,9 +163,13 @@ public class XAxisRenderer extends AxisRenderer {
         }
     }
 
+    private Paint getLabelPaint(int i) {
+        return mXAxis.getSelectedIndex() != null && mXAxis.getSelectedIndex().equals(i) ? getPaintAxisHighlightedLabels() : getPaintAxisLabels();
+    }
+
     protected void drawLabel(Canvas c, String label, int xIndex, float x, float y) {
         String formattedLabel = mXAxis.getXValueFormatter().getXValue(label, xIndex, mViewPortHandler);
-        c.drawText(formattedLabel, x, y, mAxisLabelPaint);
+        c.drawText(formattedLabel, x, y, getLabelPaint(xIndex));
     }
 
     @Override
@@ -174,6 +186,9 @@ public class XAxisRenderer extends AxisRenderer {
         mGridPaint.setColor(mXAxis.getGridColor());
         mGridPaint.setStrokeWidth(mXAxis.getGridLineWidth());
         mGridPaint.setPathEffect(mXAxis.getGridDashPathEffect());
+        Shader shader = new LinearGradient(0, 0, 0, mViewPortHandler.getChartHeight(), Color.parseColor("#00FFFFFF"),  mXAxis.getGridColor(), Shader.TileMode.MIRROR /*or REPEAT*/);
+        mGridPaint.setShader(shader);
+
 
         Path gridLinePath = new Path();
 

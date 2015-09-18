@@ -42,6 +42,7 @@ public abstract class DataRenderer extends Renderer {
      * entries)
      */
     protected Paint mValuePaint;
+    protected Integer mSelectedIndex;
 
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(viewPortHandler);
@@ -125,4 +126,12 @@ public abstract class DataRenderer extends Renderer {
      * @param indices the highlighted values
      */
     public abstract void drawHighlighted(Canvas c, Highlight[] indices);
+
+    public void setSelectedIndex(Integer mSelectedIndex) {
+        this.mSelectedIndex = mSelectedIndex;
+    }
+
+    public Integer getSelectedIndex() {
+        return mSelectedIndex;
+    }
 }

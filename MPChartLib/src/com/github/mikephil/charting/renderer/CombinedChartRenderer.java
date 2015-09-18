@@ -104,6 +104,14 @@ public class CombinedChartRenderer extends DataRenderer {
 	}
 
 	@Override
+	public void setSelectedIndex(Integer mSelectedIndex) {
+		super.setSelectedIndex(mSelectedIndex);
+		for(DataRenderer renderer : mRenderers){
+			renderer.setSelectedIndex(mSelectedIndex);
+		}
+	}
+
+	@Override
 	public void calcXBounds(BarLineScatterCandleBubbleDataProvider chart, int xAxisModulus) {
 		for (DataRenderer renderer : mRenderers)
 			renderer.calcXBounds(chart, xAxisModulus);

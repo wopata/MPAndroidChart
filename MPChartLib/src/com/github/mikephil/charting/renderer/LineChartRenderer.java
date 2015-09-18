@@ -18,6 +18,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LineChartRenderer extends LineScatterCandleRadarRenderer {
@@ -492,9 +493,21 @@ public class LineChartRenderer extends LineScatterCandleRadarRenderer {
             buffer.limitTo(maxx);
             buffer.feed(entries);
 
+            ArrayList<Integer> selectedCircles = new ArrayList<>();
+            if(mSelectedIndex != null) {
+                for (int entryIt = 0; entryIt!= entries.size();entryIt++) {
+                    int xIndex = entries.get(entryIt).getXIndex();
+                    if (mSelectedIndex.equals(xIndex)){
+                        selectedCircles.add(entryIt);
+                    }else if (xIndex > mSelectedIndex){
+                        break;
+                    }
+                }
+            }
+
             trans.pointValuesToPixel(buffer.buffer);
 
-            float halfsize = dataSet.getCircleSize() / 2f;
+            float innerCircleSize = dataSet.getCircleSize() - dataSet.getLineWidth();
 
             for (int j = 0, count = (int) Math.ceil((maxx - minx) * phaseX + minx) * 2; j < count; j += 2) {
 
@@ -517,9 +530,9 @@ public class LineChartRenderer extends LineScatterCandleRadarRenderer {
                         mRenderPaint);
 
                 if (dataSet.isDrawCircleHoleEnabled()
-                        && circleColor != mCirclePaintInner.getColor())
+                        && circleColor != mCirclePaintInner.getColor()  && !selectedCircles.contains(j/2))
                     c.drawCircle(x, y,
-                            halfsize,
+                            innerCircleSize,
                             mCirclePaintInner);
             }
         }
